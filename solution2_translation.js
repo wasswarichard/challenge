@@ -5,14 +5,14 @@ const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const fontKit = require('@pdf-lib/fontKit');
 
 (async () => {
-    console.time('translating');
     try{
+        console.time('translating');
+
         const file = fs.readFileSync('./demo_123.pdf');
         const { text: parsedText } = await pdfParse(file);
         const { text: translatedText} = await translate.translate(parsedText, { from: 'ko', to: 'en' });
 
         const pdfDoc = await PDFDocument.create();
-
 
         const fontBytes = fs.readFileSync('NotoSans-Regular.ttf');
         pdfDoc.registerFontkit(fontKit)
@@ -38,15 +38,6 @@ const fontKit = require('@pdf-lib/fontKit');
 
         const pdfBytes = await pdfDoc.save();
         fs.writeFileSync('./translated.pdf', pdfBytes);
-
-        // // create a new PDF document
-        // const pdfDoc = await PDFDocument.create();
-        // const page = pdfDoc.addPage();
-        // page.drawText('Hello, this is a PDF generated using fs.writeFileSync!');
-        //
-        // // Serialize the PDFDocument to bytes
-        // const pdfBytes =  await pdfDoc.save();
-        // fs.writeFileSync('./translated.pdf', pdfBytes);
     }catch(error){
         console.error(error);
     }finally {
